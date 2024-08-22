@@ -25,6 +25,7 @@ phases:
       - echo Running pre-build commands...
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 550843840101.dkr.ecr.us-east-1.amazonaws.com
       - docker build -t rapidfort/nginx .
+      - docker-compose -f community_images/nginx/bitnami/docker-compose.yml build
       # - docker push ${AWS_ECR_REPOSITORY}:${NGINX_IMAGE_TAG}
 
 artifacts:
