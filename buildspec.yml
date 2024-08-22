@@ -1,29 +1,24 @@
 version: 0.2
 
 phases:
-  pre_build:
+  install:
     commands:
-      - echo Logging in to Amazon ECR...
-      - aws --version
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 550843840101.dkr.ecr.us-east-1.amazonaws.com
-      - echo Build starting...
-
+      # - echo Installing dependencies...
+      # - apt-get update && apt-get install -y docker-compose
+  pre_build:
+    # commands:
+    #   - echo Running pre-build commands...
+    #   - echo Logging in to Amazon ECR...
+    #   - $(aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 550843840101.dkr.ecr.us-east-1.amazonaws.com)
   build:
     commands:
-
-      - echo Building Docker image using Docker Compose...
-      - docker-compose up -d 
-      - echo Tagging Docker image...
-      - docker tag rapidfor/ngnix-bitnami:latest 550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfor/ngnix-bitnami:latest
-
-
-
+      - echo Building the Docker image...
+      - docker-compose -f community_images/nginx/bitnami/docker-compose.yml build
   post_build:
     commands:
-      - echo Pushing Docker image to ECR...
-      - docker push 550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfor/ngnix-bitnami:latest
       - echo Build complete
 
 artifacts:
   files:
     - '**/*'
+  discard-paths: yes
