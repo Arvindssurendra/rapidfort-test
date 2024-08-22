@@ -4,15 +4,16 @@ phases:
   install:
     commands:
       - echo "Installing Docker..."
-      # Install dependencies for Docker
+      # Update package lists and install Docker dependencies
       - apt-get update -y || yum update -y
-      # Install Docker for Ubuntu/Debian environments
+      - apt-get install -y curl || yum install -y curl
+      # Download and install Docker
       - curl -fsSL https://get.docker.com -o get-docker.sh
       - sh get-docker.sh
-      # Start Docker service
+      # Start Docker in the background
       - dockerd > /dev/null 2>&1 &
-      # Confirm Docker is running
-      - docker --version
+      # Verify Docker is installed
+      - docker --version || { echo "Docker installation failed"; exit 1; }
   pre_build:
     commands:
       - echo Running pre-build commands...
