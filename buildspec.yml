@@ -20,7 +20,7 @@ phases:
     commands:
       - echo Running pre-build commands...
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 550843840101.dkr.ecr.us-east-1.amazonaws.com
-      - docker-compose -f community_images/nginx/bitnami/docker-compose.yml build
+      # - docker-compose -f community_images/nginx/bitnami/docker-compose.yml build
       - docker tag rapidfort/nginx:latest 550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfor/ngnix-bitnami:latest
       - docker push 550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfor/ngnix-bitnami:latest
 
