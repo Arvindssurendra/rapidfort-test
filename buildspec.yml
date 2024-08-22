@@ -12,7 +12,7 @@ phases:
     commands:
 
       - echo Building Docker image using Docker Compose...
-      - cd community_images/nginx/bitnami && docker-compose up -d 
+      - docker-compose up -d 
       - echo Tagging Docker image...
       - docker tag rapidfor/ngnix-bitnami:latest 550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfor/ngnix-bitnami:latest
 
