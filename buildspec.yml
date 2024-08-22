@@ -10,10 +10,13 @@ phases:
 
   build:
     commands:
-      - echo Building Docker image...
+      - echo Navigating to Docker Compose file directory...
+      - cd rapidfort-test/community_images/nginx/bitnami
+      - echo Building Docker image using Docker Compose...
       - docker-compose -f docker-compose.yml build
       - echo Tagging Docker image...
       - docker tag rapidfor/ngnix-bitnami:latest 550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfor/ngnix-bitnami:latest
+
 
   post_build:
     commands:
