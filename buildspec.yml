@@ -4,20 +4,14 @@ phases:
   install:
     commands:
       - echo "Installing Docker..."
-      # Check if the build environment is Amazon Linux 2 or Ubuntu, and install Docker accordingly
-      # For Amazon Linux 2 (yum-based systems):
-      - if [ -x "$(command -v yum)" ]; then
-            yum update -y &&
-            yum install -y docker &&
-            service docker start;
-        fi
-      # For Ubuntu-based systems:
-      - if [ -x "$(command -v apt-get)" ]; then
-            apt-get update -y &&
-            apt-get install -y docker.io &&
-            service docker start;
-        fi
-      # Check if Docker was installed successfully
+      # Install dependencies for Docker
+      - apt-get update -y || yum update -y
+      # Install Docker for Ubuntu/Debian environments
+      - curl -fsSL https://get.docker.com -o get-docker.sh
+      - sh get-docker.sh
+      # Start Docker service
+      - dockerd > /dev/null 2>&1 &
+      # Confirm Docker is running
       - docker --version
   pre_build:
     commands:
