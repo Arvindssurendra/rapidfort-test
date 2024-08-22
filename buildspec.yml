@@ -3,17 +3,20 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo "Installing Docker..."
-      # Update package lists and install Docker dependencies
-      - apt-get update -y || yum update -y
-      - apt-get install -y curl || yum install -y curl
-      # Download and install Docker
-      - curl -fsSL https://get.docker.com -o get-docker.sh
-      - sh get-docker.sh
-      # Start Docker in the background
-      - dockerd > /dev/null 2>&1 &
-      # Verify Docker is installed
-      - docker --version || { echo "Docker installation failed"; exit 1; }
+      - echo "Installing Docker with root permissions..."
+      # Update system and install curl if necessary
+      - sudo apt-get update -y || sudo yum update -y
+      - sudo apt-get install -y curl || sudo yum install -y curl
+      # Download Docker installation script
+      - sudo curl -fsSL https://get.docker.com -o get-docker.sh
+      # Give executable permissions to the script
+      - sudo chmod +x get-docker.sh
+      # Execute the Docker installation script with root permissions
+      - sudo ./get-docker.sh
+      # Start Docker daemon in the background with root permissions
+      - sudo dockerd > /dev/null 2>&1 &
+      # Verify Docker installation
+      - sudo docker --version
   pre_build:
     commands:
       - echo Running pre-build commands...
