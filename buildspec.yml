@@ -3,17 +3,28 @@ version: 0.2
 phases:
   install:
     commands:
-      # - echo Installing dependencies...
-      # - apt-get update && apt-get install -y docker-compose
+      - echo Installing Docker and Docker Compose...
+      - apt-get update
+      - apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+      - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+      - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+      - apt-get update
+      - apt-get install -y docker-ce
+      - curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+      - chmod +x /usr/local/bin/docker-compose
+      - ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+      - service docker start
+      - docker --version
+      - docker-compose --version
   pre_build:
     commands:
-      # - echo Running pre-build commands...
-      # - echo Logging in to Amazon ECR...
-      # - $(aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 550843840101.dkr.ecr.us-east-1.amazonaws.com)
+      - echo Running pre-build commands...
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 550843840101.dkr.ecr.us-east-1.amazonaws.com)
   build:
     commands:
       - echo Building the Docker image...
-      - docker-compose build
+      - docker-compose -f community_images/nginx/bitnami/docker-compose.yml build || cat /var/log/docker.log
   post_build:
     commands:
       - echo Build complete
