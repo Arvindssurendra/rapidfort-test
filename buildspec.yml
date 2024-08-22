@@ -1,34 +1,26 @@
 version: 0.2
 
 phases:
-  install:
-    commands:
-      - echo "Installing Docker..."
-      # Check for apt-get and install curl using apt-get if found
-      - if command -v apt-get >/dev/null; then sudo apt-get update -y && sudo apt-get install -y curl; fi
-      # Check for yum and install curl using yum if found
-      - if command -v yum >/dev/null; then sudo yum update -y && sudo yum install -y curl; fi
-      # Install Docker using the official Docker installation script
-      - curl -fsSL https://get.docker.com -o get-docker.sh
-      - sudo chmod +x get-docker.sh
-      - sudo ./get-docker.sh
-      # Start Docker daemon
-      - sudo dockerd > /dev/null 2>&1 &
-      - docker --version
   pre_build:
     commands:
-      - echo Running pre-build commands...
       - echo Logging in to Amazon ECR...
-      - $(aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 550843840101.dkr.ecr.us-east-1.amazonaws.com)
+      - aws --version
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 550843840101.dkr.ecr.us-east-1.amazonaws.com
+      - echo Build starting...
+
   build:
     commands:
-      - echo Building the Docker image...
-      - docker-compose -f community_images/nginx/bitnami/docker-compose.yml build || cat /var/log/docker.log
+      - echo Building Docker image...
+      - docker-compose -f docker-compose.yml build
+      - echo Tagging Docker image...
+      - docker tag rapidfor/ngnix-bitnami:latest 550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfor/ngnix-bitnami:latest
+
   post_build:
     commands:
+      - echo Pushing Docker image to ECR...
+      - docker push 550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfor/ngnix-bitnami:latest
       - echo Build complete
 
 artifacts:
   files:
     - '**/*'
-  discard-paths: yes
