@@ -1,5 +1,10 @@
 version: 0.2
 
+variables:
+  NGINX_IMAGE_REPOSITORY: 'rapidfort/nginx'
+  NGINX_IMAGE_TAG: 'latest'
+  AWS_ECR_REPOSITORY: '550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfort/nginx'
+
 phases:
   install:
     commands:
@@ -9,21 +14,18 @@ phases:
     commands:
       - echo Building the Docker image...
       - docker-compose -f community_images/nginx/bitnami/docker-compose.yml build
-      # - echo Running pre-build commands...
-      # - echo Logging in to Amazon ECR...
-      # - $(aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 550843840101.dkr.ecr.us-east-1.amazonaws.com)
+      
   build:
     commands:
       - echo Building the Docker image...
       - docker-compose -f community_images/nginx/bitnami/docker-compose.yml build
+
   post_build:
     commands:
       - echo Running pre-build commands...
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 550843840101.dkr.ecr.us-east-1.amazonaws.com
-      # - docker-compose -f community_images/nginx/bitnami/docker-compose.yml build
-      - docker tag rapidfort/nginx:latest 550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfort/nginx:latest
-      - docker push 550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfort/nginx:latest
-
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ECR_REPOSITORY}
+      - docker tag ${NGINX_IMAGE_REPOSITORY}:${NGINX_IMAGE_TAG} ${AWS_ECR_REPOSITORY}:${NGINX_IMAGE_TAG}
+      - docker push ${AWS_ECR_REPOSITORY}:${NGINX_IMAGE_TAG}
 
 artifacts:
   files:
