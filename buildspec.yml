@@ -3,29 +3,21 @@ version: 0.2
 phases:
   install:
     commands:
-      # - echo Installing Docker and Docker Compose...
-      # - apt-get update
-      # - apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-      # - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-      # - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-      # - apt-get update
-      # - apt-get install -y docker-ce
-      # - curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-      # - chmod +x /usr/local/bin/docker-compose
-      # - ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-      # - service docker start
-      # - docker --version
-      # - docker-compose --version
       - echo "Installing Docker..."
-      # Update the package index
-      - yum update -y
-      # Install Docker
-      - amazon-linux-extras install docker -y
-      # Start the Docker service
-      - service docker start
-      # Add the current user to the Docker group (optional)
-      - usermod -a -G docker $USER
-      # Ensure Docker is running
+      # Check if the build environment is Amazon Linux 2 or Ubuntu, and install Docker accordingly
+      # For Amazon Linux 2 (yum-based systems):
+      - if [ -x "$(command -v yum)" ]; then
+            yum update -y &&
+            yum install -y docker &&
+            service docker start;
+        fi
+      # For Ubuntu-based systems:
+      - if [ -x "$(command -v apt-get)" ]; then
+            apt-get update -y &&
+            apt-get install -y docker.io &&
+            service docker start;
+        fi
+      # Check if Docker was installed successfully
       - docker --version
   pre_build:
     commands:
