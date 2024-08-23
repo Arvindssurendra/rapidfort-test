@@ -9,3 +9,4 @@ phases:
       - cd community_images/nginx/bitnami
       - echo "Building Docker image using Docker Compose"
       - docker-compose build
+      - docker image ls
