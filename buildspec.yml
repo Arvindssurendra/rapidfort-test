@@ -13,14 +13,30 @@ phases:
 
   build:
     commands:
-      - echo "Listing files in the repository"
-      - ls -R
-      - echo "Navigating to the Docker Compose directory"
-      - cd community_images/nginx/bitnami
-      - ls -R
-      - echo "Building Docker image using Docker Compose"
-      - docker-compose up -d
+      # - echo "Listing files in the repository"
+      # - ls -R
+      # - echo "Navigating to the Docker Compose directory"
+      # - cd community_images/nginx/bitnami
+      # - ls -R
+      # - echo "Building Docker image using Docker Compose"
+      # - docker-compose up -d
+      # - docker image ls
+      # - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 550843840101.dkr.ecr.us-east-1.amazonaws.com
+      # - docker tag rapidfort/nginx:latest 550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfort/nginx:latest
+      # - docker push rapidfort/nginx 
+      - echo "Pulling the rapidfort/nginx image from Docker Hub"
+      - docker pull rapidfort/nginx
+      - echo "Listing Docker images"
       - docker image ls
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 550843840101.dkr.ecr.us-east-1.amazonaws.com
-      - docker tag rapidfort/nginx:latest 550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfort/nginx:latest
-      - docker push rapidfort/nginx  
+
+  post_build:
+    commands:
+    
+      - echo "Running the Docker container"
+      - docker run -d -p 80:80 --name my_nginx_container rapidfort/nginx
+      - echo "Copying the coverage script to the container"
+      - docker cp community_images/nginx/bitnami/coverage_script.sh my_nginx_container:/coverage_script.sh
+      - echo "Making the script executable"
+      - docker exec my_nginx_container chmod +x /coverage_script.sh
+      - echo "Running the coverage script inside the container"
+      - docker exec my_nginx_container /coverage_script.sh
