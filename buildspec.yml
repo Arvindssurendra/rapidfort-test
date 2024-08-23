@@ -31,8 +31,7 @@ phases:
 
       - echo Running pre-build commands...
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 550843840101.dkr.ecr.us-east-1.amazonaws.com
-      - docker tag  ${NGINX_IMAGE_REPOSITORY}:${NGINX_IMAGE_TAG} ${AWS_ECR_REPOSITORY}:${NGINX_IMAGE_TAG}
-      - docker push ${AWS_ECR_REPOSITORY}:${NGINX_IMAGE_TAG}
+      - docker tag rapidfort/nginx:latest 550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfort/nginx:latest
 
 artifacts:
   files:
