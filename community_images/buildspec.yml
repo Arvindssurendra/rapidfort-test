@@ -1,5 +1,10 @@
 version: 0.2
 
+env:
+  variables:
+    NGINX_IMAGE_REPOSITORY: rapidfort/nginx
+    NGINX_IMAGE_TAG: latest
+
 phases:
   install:
     commands:
@@ -9,7 +14,8 @@ phases:
 
   pre_build:
     commands:
-      - echo "Pre-build phase... (no ECR login required)"
+      - echo "Pulling the NGINX Docker image..."
+      - docker pull ${NGINX_IMAGE_REPOSITORY}:${NGINX_IMAGE_TAG}
 
   build:
     commands:
