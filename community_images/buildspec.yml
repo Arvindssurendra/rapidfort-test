@@ -1,32 +1,7 @@
 version: 0.2
 
-env:
-  variables:
-    NGINX_IMAGE_REPOSITORY: rapidfort/nginx
-    NGINX_IMAGE_TAG: latest
-
 phases:
-  install:
-    commands:
-      - echo "Installing dependencies..."
-      - apt-get update -y
-      - apt-get install -y docker-compose
-
-  pre_build:
-    commands:
-      - echo "Pulling the NGINX Docker image..."
-      - docker pull ${NGINX_IMAGE_REPOSITORY}:${NGINX_IMAGE_TAG}
-
   build:
     commands:
-      - echo "Building Docker image with Docker Compose..."
-      - docker-compose -f nginx/bitnami/docker-compose.yml build
-
-  post_build:
-    commands:
-      - echo "Build completed successfully."
-
-artifacts:
-  files:
-    - '**/*'
-  discard-paths: yes
+      - echo "Listing files in the repository"
+      - ls -R
