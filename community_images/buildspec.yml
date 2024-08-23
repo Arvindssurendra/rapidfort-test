@@ -18,7 +18,7 @@ phases:
       - echo "Listing Docker images before build..."
       - docker image ls
       - echo "Building Docker image with Docker Compose..."
-      - docker-compose -f community_images/nginx/bitnami/docker-compose.yml build
+      - docker-compose up
       - echo "Listing Docker images after build..."
       - docker image ls
       - echo "Running pre-build commands..."
