@@ -1,4 +1,4 @@
-version: 0.2
+# version: '3.8'
 
 variables:
   NGINX_IMAGE_REPOSITORY: 'rapidfort/nginx'
