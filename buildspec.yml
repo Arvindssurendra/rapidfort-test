@@ -8,20 +8,24 @@ variables:
 phases:
   install:
     commands:
-      - export NGINX_IMAGE_REPOSITORY=rapidfort/nginx
-      - export NGINX_IMAGE_TAG=latest
-      - export  AWS_ECR_REPOSITORY=550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfort/nginx
+      - echo "Setting up environment variables..."
+      - export NGINX_IMAGE_REPOSITORY=${NGINX_IMAGE_REPOSITORY}
+      - export NGINX_IMAGE_TAG=${NGINX_IMAGE_TAG}
+      - export AWS_ECR_REPOSITORY=${AWS_ECR_REPOSITORY}
 
   pre_build:
     commands:
+      - echo "Listing Docker images before build..."
       - docker image ls
+      - echo "Building Docker image with Docker Compose..."
       - docker-compose -f community_images/nginx/bitnami/docker-compose.yml build
+      - echo "Listing Docker images after build..."
       - docker image ls
+      - echo "Running pre-build commands..."
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ECR_REPOSITORY}
+      - docker tag ${NGINX_IMAGE_REPOSITORY}:${NGINX_IMAGE_TAG} ${AWS_ECR_REPOSITORY}:${NGINX_IMAGE_TAG}
+      - docker push ${AWS_ECR_REPOSITORY}:${NGINX_IMAGE_TAG}
 
-      - echo Running pre-build commands...
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 550843840101.dkr.ecr.us-east-1.amazonaws.com
-      - docker push rapidfort/nginx:latest
-      
   build:
     commands: []
 
