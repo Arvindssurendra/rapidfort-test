@@ -7,9 +7,8 @@ variables:
 
 phases:
   install:
-    commands:     
-    - echo Building the Docker image...
-    - docker-compose -f community_images/nginx/bitnami/docker-compose.yml build
+    commands:
+     - docker-compose up -d
 
   pre_build:
     commands:
