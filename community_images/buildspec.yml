@@ -7,12 +7,9 @@ variables:
 
 phases:
   install:
-    commands:
-      - echo "Cloning the repository..."
-      - git clone https://github.com/Arvindssurendra/rapidfort-test.git
-      - cd rapidfort-test
-      - echo "Listing files in the cloned repository..."
-      - ls -al
+    commands:     
+    - echo Building the Docker image...
+    - docker-compose -f community_images/nginx/bitnami/docker-compose.yml build
 
   pre_build:
     commands:
