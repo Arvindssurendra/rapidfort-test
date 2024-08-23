@@ -8,31 +8,28 @@ variables:
 phases:
   install:
     commands:
-      # - echo Installing dependencies...
-      # - apt-get update && apt-get install -y docker-compose
+      - echo Building the Docker image...
+      - docker-compose -f community_images/nginx/bitnami/docker-compose.yml build
   pre_build:
-    commands:
-      - echo Building the Docker image...
-      - docker-compose -f community_images/nginx/bitnami/docker-compose.yml build
-      
-  build:
-    commands:
-      - echo Building the Docker image...
-      - docker-compose -f community_images/nginx/bitnami/docker-compose.yml build
-
-  post_build:
     commands:
       - export NGINX_IMAGE_REPOSITORY=rapidfort/nginx
       - export NGINX_IMAGE_TAG=latest
       - export  AWS_ECR_REPOSITORY=550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfort/nginx
 
-      -  docker-compose -f community_images/nginx/bitnami/docker-compose.yml build
+      - docker-compose -f community_images/nginx/bitnami/docker-compose.yml build
       - docker image ls
 
       - echo Running pre-build commands...
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 550843840101.dkr.ecr.us-east-1.amazonaws.com
-      # - docker tag rapidfort/nginx:latest 550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfort/nginx:latest
       - docker push rapidfort/nginx:latest
+      
+  build:
+    commands:
+
+
+  post_build:
+    commands:
+
 
 artifacts:
   files:
