@@ -14,6 +14,7 @@ phases:
       - ls -R
       - echo "Navigating to the Docker Compose directory"
       - cd community_images/nginx/bitnami
+      - ls -R
       - echo "Building Docker image using Docker Compose"
-      - docker-compose build
+      - docker-compose up -d
       - docker image ls
