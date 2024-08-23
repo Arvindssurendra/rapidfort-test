@@ -1,4 +1,4 @@
-# version: '3.8'
+version: 0.2
 
 variables:
   NGINX_IMAGE_REPOSITORY: 'rapidfort/nginx'
@@ -8,14 +8,13 @@ variables:
 phases:
   install:
     commands:
-      - echo Building the Docker image...
-      - docker-compose -f community_images/nginx/bitnami/docker-compose.yml build
-  pre_build:
-    commands:
       - export NGINX_IMAGE_REPOSITORY=rapidfort/nginx
       - export NGINX_IMAGE_TAG=latest
       - export  AWS_ECR_REPOSITORY=550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfort/nginx
 
+  pre_build:
+    commands:
+      - docker image ls
       - docker-compose -f community_images/nginx/bitnami/docker-compose.yml build
       - docker image ls
 
@@ -24,12 +23,10 @@ phases:
       - docker push rapidfort/nginx:latest
       
   build:
-    commands:
-
+    commands: []
 
   post_build:
-    commands:
-
+    commands: []
 
 artifacts:
   files:
