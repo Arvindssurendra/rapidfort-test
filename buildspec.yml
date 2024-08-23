@@ -24,14 +24,14 @@ phases:
     commands:
       - export NGINX_IMAGE_REPOSITORY=rapidfort/nginx
       - export NGINX_IMAGE_TAG=latest
-      # - export RF_ACCESS_TOKEN=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
       - export  AWS_ECR_REPOSITORY=550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfort/nginx
 
       -  docker-compose -f community_images/nginx/bitnami/docker-compose.yml build
 
       - echo Running pre-build commands...
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 550843840101.dkr.ecr.us-east-1.amazonaws.com
-      - docker tag rapidfort/nginx:latest 550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfort/nginx:latest
+      # - docker tag rapidfort/nginx:latest 550843840101.dkr.ecr.us-east-1.amazonaws.com/rapidfort/nginx:latest
+      - docker push rapidfort/nginx:latest
 
 artifacts:
   files:
