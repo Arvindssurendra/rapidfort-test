@@ -5,3 +5,7 @@ phases:
     commands:
       - echo "Listing files in the repository"
       - ls -R
+      - echo "Navigating to the Docker Compose directory"
+      - cd community_images/nginx/bitnami
+      - echo "Building Docker image using Docker Compose"
+      - docker-compose build
