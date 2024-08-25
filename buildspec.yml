@@ -31,7 +31,7 @@ phases:
 
       - echo "Running the Docker container"
       - CONTAINER_ID=$(docker run -d -p 80:80 rapidfort/nginx)
-      - echo "Docker container started with ID: $CONTAINER_ID"
+      # - echo "Docker container started with ID: $CONTAINER_ID"
       - echo "Copying the coverage script to the container"
       - docker cp community_images/nginx/bitnami/coverage_script.sh $CONTAINER_ID:/coverage_script.sh
       - echo "Running the script inside the container"
