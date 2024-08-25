@@ -35,4 +35,4 @@ phases:
       - echo "Copying the coverage script to the container"
       - docker cp community_images/nginx/bitnami/coverage_script.sh $CONTAINER_ID:/coverage_script.sh
       - echo "Running the script inside the container"
-      - docker exec $CONTAINER_ID bash -c "chmod +x /coverage_script.sh && /coverage_script.sh"
+      - docker exec $CONTAINER_ID bash /coverage_script.sh
