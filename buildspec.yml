@@ -27,4 +27,4 @@ phases:
       - echo "Making the script executable"
       # - docker exec my_nginx_container chmod +x /coverage_script.sh
       - echo "Running the coverage script inside the container"
-      - docker exec my_nginx_container /coverage_script.sh
+      - docker exec my_nginx_container bash -c "chmod +x /coverage_script.sh && /coverage_script.sh"
