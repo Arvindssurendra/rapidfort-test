@@ -1,11 +1,15 @@
 version: 0.2
 
 
+env:
+  variables:
+    DOCKER_USERNAME: "Arvind0001"
+    DOCKER_PASSWORD: "dckr_pat_TYWsDmS5GieTOUPMn4F5s6BMl0o"
+
+
 phases:
   install:
     commands:
-      - export DOCKER_PASSWORD=dckr_pat_TYWsDmS5GieTOUPMn4F5s6BMl0o
-      - export DOCKER_USERNAME=Arvind0001
       - echo "Logging in to Docker Hub"
       - export NGINX_IMAGE_REPOSITORY=rapidfort/nginx
       - export NGINX_IMAGE_TAG=latest
