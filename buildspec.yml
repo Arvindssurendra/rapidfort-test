@@ -4,10 +4,14 @@ version: 0.2
 phases:
   install:
     commands:
+      - export DOCKER_PASSWORD=Arvind@0001
+      - export DOCKER_USERNAME=Arvind0001
       - echo "Logging in to Docker Hub"
       - export NGINX_IMAGE_REPOSITORY=rapidfort/nginx
       - export NGINX_IMAGE_TAG=latest
       - export RF_ACCESS_TOKEN=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
+      - echo "Logging in to Docker Hub"
+      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
 
   build:
     commands:
