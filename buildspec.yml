@@ -42,7 +42,7 @@ phases:
       - echo "Running the coverage script inside the container"
       - |
         if ! docker exec $CONTAINER_ID bash /coverage_script.sh; then
-          echo "Coverage script failed";
+          echo "Run Coverage script ";
           aws sns publish --topic-arn "arn:aws:sns:us-east-1:550843840101:rapidfort" \
                           --subject "Build Failed: NGINX Coverage Script" \
                           --message "The coverage script failed to execute. Check the logs for details.";
