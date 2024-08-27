@@ -13,9 +13,10 @@ phases:
     commands:
 
       - echo "Pulling the rapidfort/nginx image from Docker Hub"
-      - docker pull rapidfort/nginx
-      - echo "Listing Docker images"
+      # - docker pull rapidfort/nginx
+      # - echo "Listing Docker images"
       - docker image ls
+      - ls -R
 
   post_build:
     commands:
