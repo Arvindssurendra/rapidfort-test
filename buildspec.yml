@@ -37,7 +37,7 @@ phases:
       - echo "Running the script inside the container"
       - docker exec $CONTAINER_ID bash /coverage_script.sh
 
-    reports:
+  reports:
     failure:
       commands:
         - echo "Build failed, sending SNS notification"
