@@ -29,7 +29,8 @@ phases:
       - CONTAINER_ID=$(docker ps -qf "name=bitnami-nginx-1")
       - echo "Container ID for bitnami-nginx-1 is $CONTAINER_ID"
       - echo "Copying the coverage script to the container"
-      - docker cp community_images/nginx/bitnami/coverage_script.sh $CONTAINER_ID:/coverage_script.sh
+      - ls -l community_images/nginx/bitnami/
+      - docker cp ./community_images/nginx/bitnami/coverage_script.sh $CONTAINER_ID:/coverage_script.sh
       - echo "Running the coverage script inside the container"
       - |
         if ! docker exec $CONTAINER_ID bash /coverage_script.sh; then
