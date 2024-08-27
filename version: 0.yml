@@ -31,8 +31,13 @@ phases:
   post_build:
     commands:
 
-      - echo "Running coverage script in the container"
+      - echo "Checking the status of running containers"
+      - docker ps -a
+      - echo "Finding the container ID for bitnami-nginx-1"
       - CONTAINER_ID=$(docker ps -qf "name=bitnami-nginx-1")
+      - echo "Container ID for bitnami-nginx-1 is $CONTAINER_ID"
+      - echo "Copying the coverage script to the container"
+      - ls && pwd
       - echo "Copying the coverage script to the container"
       - docker cp coverage_script.sh $CONTAINER_ID:/coverage_script.sh
       
