@@ -19,26 +19,19 @@ phases:
 
   post_build:
     commands:
-    
-      # - echo "Running the Docker container"
-      # - docker run -d -p 80:80 --name my_nginx_container rapidfort/nginx
-      # - echo "Copying the coverage script to the container"
-      # - docker cp community_images/nginx/bitnami/coverage_script.sh my_nginx_container:/coverage_script.sh
-      # - echo "Making the script executable"
-      # # - docker exec my_nginx_container chmod +x /coverage_script.sh
-      # - echo "Running the coverage script inside the container"
-      # - docker exec my_nginx_container bash -c "chmod +x /coverage_script.sh && /coverage_script.sh"
 
       - echo "Running the Docker container"
       - CONTAINER_ID=$(docker run -d -p 80:80 rapidfort/nginx)
-      # - echo "Docker container started with ID: $CONTAINER_ID"
       - echo "Copying the coverage script to the container"
       - docker cp community_images/nginx/bitnami/coverage_script.sh $CONTAINER_ID:/coverage_script.sh
       - echo "Running the script inside the container"
-      - docker exec $CONTAINER_ID bash /coverage_script.sh
-
-reports:
-  failure:
-    commands:
-        - echo "Build failed, sending SNS notification"
-        - aws sns publish --topic-arn "arn:aws:sns:us-east-1:550843840101:rapidfort" --subject "Build Failed: NGINX Coverage Script" --message "The coverage script failed to execute. Check the logs for details."
+      # - docker exec $CONTAINER_ID bash /coverage_script.sh
+      - |
+        if ! docker exec $CONTAINER_ID bash /coverage_script.sh; then
+          echo "Coverage script failed"
+          aws sns publish --topic-arn "arn:aws:sns:us-east-1:550843840101:rapidfort" \
+                          --subject "Build Failed: NGINX Coverage Script" \
+                          --message "The coverage script failed to execute. Check the logs for details."
+          exit 1
+        fi
+        
