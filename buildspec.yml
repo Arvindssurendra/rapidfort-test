@@ -22,8 +22,8 @@ phases:
 
       - echo "Pulling the rapidfort/nginx image from Docker Hub"
       - docker image ls
-      - ls -R
       - cd community_images/nginx/bitnami
+      - ls 
       - echo "Running docker-compose up"
       - docker-compose up -d
       - docker ps -a
@@ -37,7 +37,7 @@ phases:
       - CONTAINER_ID=$(docker ps -qf "name=bitnami-nginx-1")
       - echo "Container ID for bitnami-nginx-1 is $CONTAINER_ID"
       - echo "Copying the coverage script to the container"
-      - ls -R community_images/nginx/bitnami/
+      - ls && pwd
       - docker cp coverage_script.sh $CONTAINER_ID:/coverage_script.sh
       - echo "Running the coverage script inside the container"
       - |
