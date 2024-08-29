@@ -45,3 +45,4 @@ phases:
                           --message "The coverage script failed to execute. Check the logs for details.\n\n$(cat /tmp/coverage_output.log)";
           exit 1;
         fi
+      - docker ps -a
