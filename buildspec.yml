@@ -1,20 +1,15 @@
 version: 0.2
 
 
-env:
-  variables:
-
-
-
 phases:
   install:
     commands:
-      - echo "Logging in to Docker Hub"
+
+       # Below variables are required to spinup nginx image
       - export NGINX_IMAGE_REPOSITORY=rapidfort/nginx
       - export NGINX_IMAGE_TAG=latest
-      - export RF_ACCESS_TOKEN=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
-      - echo "Logging in to Docker Hub"
-      - docker login -u arvind0001 -p dckr_pat_TYWsDmS5GieTOUPMn4F5s6BMl0o
+      - export RF_ACCESS_TOKEN=Your_Github_Personal_AccessToken
+
 
   build:
     commands:
@@ -22,15 +17,15 @@ phases:
       - echo "Pulling the rapidfort/nginx image from Docker Hub"
       - docker image ls
       - cd community_images/nginx/bitnami
-      - ls 
-      - echo "Running docker-compose up"
+      - ls -ll
+      - echo "Running docker-compose up command to create nginx image"
       - docker-compose up -d
       - docker ps -a
 
   post_build:
     commands:
 
-      - echo "Running coverage script in the container"
+      - echo "Find nginx-1 container  and Run coverage script in the container"
       - CONTAINER_ID=$(docker ps -qf "name=bitnami-nginx-1")
       - echo "Copying the coverage script to the container"
       - docker cp coverage_script.sh $CONTAINER_ID:/coverage_script.sh
@@ -43,5 +38,6 @@ phases:
                           --subject "Build Failed: NGINX Coverage Script" \
                           --message "The coverage script failed to execute. Check the logs for details.\n\n$(cat /tmp/coverage_output.log)";
           exit 1;
-        fi
       - docker ps -a
+        fi
+    
