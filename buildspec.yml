@@ -36,18 +36,7 @@ phases:
       - CONTAINER_ID=$(docker ps -qf "name=bitnami-nginx-1")
       - echo "Copying the coverage script to the container"
       - docker cp coverage_script.sh $CONTAINER_ID:/coverage_script.sh
-
-      - echo "Checking and creating user if it doesn't exist"
-      - id -u daemon &>/dev/null || sudo useradd -r daemon
-      - echo "Updating nginx.conf to fix the user directive"
-      - sed -i 's/user www;/user daemon daemon;/g' /opt/bitnami/nginx/conf/nginx.conf
-      - cat /opt/bitnami/nginx/conf/nginx.conf
-      
-      - echo "Validating Nginx configuration"
-      - nginx -t  # Test Nginx configuration before reloading
-      - /opt/bitnami/scripts/nginx/reload.sh
-      - echo "Nginx configuration reloaded successfully"
-      
+            
       - echo "Running the coverage script inside the container"
       - |
         if ! docker exec $CONTAINER_ID bash /coverage_script.sh > /tmp/coverage_output.log 2>&1; then
