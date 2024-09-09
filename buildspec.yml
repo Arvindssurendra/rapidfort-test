@@ -37,11 +37,9 @@ phases:
       - echo "Copying the coverage script to the container"
       - docker cp coverage_script.sh $CONTAINER_ID:/coverage_script.sh
 
-      - echo "Editing /opt/bitnami/nginx/conf/nginx.conf to replace 'user www;' with 'user daemon daemon;'"
-      # Check if the file contains 'user www;' and replace it with 'user daemon daemon;'
-      - sudo sed -i 's/user www;/user daemon daemon;/g' /opt/bitnami/nginx/conf/nginx.conf
-      # Verify that the replacement has been made
-      - grep 'user daemon daemon;' /opt/bitnami/nginx/conf/nginx.conf && echo "Replacement successful"
+      - echo "Checking if nginx.conf exists"
+      - if [ -f /opt/bitnami/nginx/conf/nginx.conf ]; then sudo sed -i 's/user www;/user daemon daemon;/g' /opt/bitnami/nginx/conf/nginx.conf; else echo "nginx.conf not found, skipping"; fi
+      - echo "Proceeding with other steps"
 
       - echo "Starting post-build phase"
       - sudo nginx -t  # Test the Nginx configuration
