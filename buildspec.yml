@@ -36,7 +36,7 @@ phases:
       - CONTAINER_ID=$(docker ps -qf "name=bitnami-nginx-1")
       - echo "Copying the coverage script to the container"
       - docker cp coverage_script.sh $CONTAINER_ID:/coverage_script.sh
-            
+
       - echo "Running the coverage script inside the container"
       - |
         if ! docker exec $CONTAINER_ID bash /coverage_script.sh > /tmp/coverage_output.log 2>&1; then
@@ -46,3 +46,5 @@ phases:
                           --message "The coverage script failed to execute. Check the logs for details.\n\n$(cat /tmp/coverage_output.log)";
           exit 1;
         fi
+
+        
