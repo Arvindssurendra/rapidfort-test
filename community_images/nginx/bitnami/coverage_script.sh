@@ -46,8 +46,8 @@ set -e  # Exit on errors
 sed -i 's/user www www;/user daemon daemon;/g' /opt/bitnami/nginx/conf/nginx.conf
 
 # Step 2: Verify that the replacement was successful
-echo "Checking the nginx.conf file for the correct user directive"
-cat /opt/bitnami/nginx/conf/nginx.conf | grep 'user daemon daemon;'
+# echo "Checking the nginx.conf file for the correct user directive"
+# cat /opt/bitnami/nginx/conf/nginx.conf | grep 'user daemon daemon;'
 
 # Load the Nginx modules
 MODULE_ARRAY=('ngx_http_brotli_static_module' 'ngx_stream_geoip2_module' 'ngx_http_brotli_filter_module' 'ngx_http_geoip2_module')
