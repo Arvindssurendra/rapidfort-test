@@ -37,14 +37,6 @@ phases:
       - echo "Copying the coverage script to the container"
       - docker cp coverage_script.sh $CONTAINER_ID:/coverage_script.sh
 
-      - echo "Editing /opt/bitnami/nginx/conf/nginx.conf to replace 'user www;' with 'user daemon daemon;'"
-      # Check if the file contains 'user www;' and replace it with 'user daemon daemon;'
-      - if grep -q 'user www;' /opt/bitnami/nginx/conf/nginx.conf; then
-            sudo sed -i 's/user www www;/user daemon daemon;/g' /opt/bitnami/nginx/conf/nginx.conf;
-        fi
-      # Verify that the replacement has been made
-      - grep 'user daemon daemon;' /opt/bitnami/nginx/conf/nginx.conf && echo "Replacement successful"
-
       - echo "Running the coverage script inside the container"
       - |
         if ! docker exec $CONTAINER_ID bash /coverage_script.sh > /tmp/coverage_output.log 2>&1; then
