@@ -43,11 +43,11 @@
 set -x  # Enable debug mode
 set -e  # Exit on errors
 
-# Replace 'user www;' with 'user daemon daemon;'
-# sed -i 's/user www;/user daemon daemon;/g' /opt/bitnami/nginx/conf/nginx.conf
+sudo sed -i 's/user www www;/user daemon daemon;/g' /opt/bitnami/nginx/conf/nginx.conf
 
-# Print the file to verify the user directive is changed
-cat /opt/bitnami/nginx/conf/nginx.conf
+# Step 2: Verify that the replacement was successful
+echo "Checking the nginx.conf file for the correct user directive"
+cat /opt/bitnami/nginx/conf/nginx.conf | grep 'user daemon daemon;'
 
 # Load the Nginx modules
 MODULE_ARRAY=('ngx_http_brotli_static_module' 'ngx_stream_geoip2_module' 'ngx_http_brotli_filter_module' 'ngx_http_geoip2_module')
