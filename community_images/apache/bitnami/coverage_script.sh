@@ -17,6 +17,12 @@ if ! grep -q "LoadModule unixd_module modules/mod_unixd.so" /opt/bitnami/scripts
     echo "LoadModule unixd_module modules/mod_unixd.so" >> /opt/bitnami/scripts/modules_list
 fi
 
+# Add user and group settings to httpd.conf
+sed -i '/^User /d' /opt/bitnami/apache2/conf/httpd.conf
+sed -i '/^Group /d' /opt/bitnami/apache2/conf/httpd.conf
+echo "User daemon" >> /opt/bitnami/apache2/conf/httpd.conf
+echo "Group daemon" >> /opt/bitnami/apache2/conf/httpd.conf
+
 # Append the custom modules list to the httpd.conf
 cat /opt/bitnami/scripts/modules_list >> /opt/bitnami/apache2/conf/httpd.conf
 
