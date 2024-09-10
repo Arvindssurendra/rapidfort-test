@@ -54,6 +54,7 @@ phases:
         fi
 
       - CONTAINER_ID=$(docker ps -qf "name=bitnami-apache-1")
+      
       - docker exec $CONTAINER_ID curl -I localhost
       - |
         if ! docker exec $CONTAINER_ID curl -I localhost | grep "200 OK"; then
