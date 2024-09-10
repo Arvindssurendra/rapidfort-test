@@ -1,39 +1,37 @@
 #!/bin/bash
 
+# Enable debug mode and fail on errors
 set -x
 set -e
 
-# List available Apache modules
+# List Apache modules directory (optional for debugging)
 ls /opt/bitnami/apache2/modules/
 
-# Check currently loaded modules
+# List currently loaded Apache modules (optional for debugging)
 httpd -M
 
-# Remove existing LoadModule lines from httpd.conf
-sed -i '/LoadModule /d' /opt/bitnami/apache2/conf/httpd.conf
+# Backup the current httpd.conf file (in case you need to restore it later)
+cp /opt/bitnami/apache2/conf/httpd.conf /opt/bitnami/apache2/conf/httpd.conf.bak
 
-# Ensure mpm_prefork or mpm_worker is loaded
-if ! grep -q "LoadModule mpm_prefork_module modules/mod_mpm_prefork.so" /opt/bitnami/apache2/conf/httpd.conf; then
-    echo "LoadModule mpm_prefork_module modules/mod_mpm_prefork.so" >> /opt/bitnami/apache2/conf/httpd.conf
+# Ensure 'mod_unixd' is loaded by retaining it and commenting out other LoadModule lines
+sed -i '/LoadModule unixd_module/!s/^LoadModule/#LoadModule/' /opt/bitnami/apache2/conf/httpd.conf
+
+# Check if mod_unixd is already present; if not, add it manually
+if ! grep -q 'LoadModule unixd_module' /opt/bitnami/apache2/conf/httpd.conf; then
+  echo "LoadModule unixd_module modules/mod_unixd.so" >> /opt/bitnami/apache2/conf/httpd.conf
 fi
 
-# Ensure mod_unixd is loaded by appending it to the module list if not present
-if ! grep -q "LoadModule unixd_module modules/mod_unixd.so" /opt/bitnami/scripts/modules_list; then
-    echo "LoadModule unixd_module modules/mod_unixd.so" >> /opt/bitnami/scripts/modules_list
-fi
-
-# Add user and group settings to httpd.conf
-sed -i '/^User /d' /opt/bitnami/apache2/conf/httpd.conf
-sed -i '/^Group /d' /opt/bitnami/apache2/conf/httpd.conf
-echo "User daemon" >> /opt/bitnami/apache2/conf/httpd.conf
-echo "Group daemon" >> /opt/bitnami/apache2/conf/httpd.conf
-
-# Append the custom modules list to the httpd.conf
+# Append your custom module list to the configuration file
 cat /opt/bitnami/scripts/modules_list >> /opt/bitnami/apache2/conf/httpd.conf
 
-# Reload Apache to apply changes
+# Optionally, display the updated configuration for review (commented out by default)
+# cat /opt/bitnami/apache2/conf/httpd.conf
+
+# Reload Apache to apply the new configuration
 /opt/bitnami/scripts/apache/reload.sh
 
-# Check the Apache status
+# Check Apache status to verify it has successfully reloaded
 /opt/bitnami/scripts/apache/status.sh
 
+# List loaded Apache modules after the reload (optional for debugging)
+httpd -M
