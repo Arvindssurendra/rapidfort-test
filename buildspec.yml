@@ -1,0 +1,50 @@
+version: 0.2
+
+
+env:
+  variables:
+    DOCKER_USERNAME: "arvind0001"
+    DOCKER_PASSWORD: "dckr_pat_TYWsDmS5GieTOUPMn4F5s6BMl0o"
+
+
+phases:
+  install:
+    commands:
+      - echo "Logging in to Docker Hub"
+      - export APACHE_IMAGE_REPOSITORY=rapidfort/apache
+      - export APACHE_IMAGE_TAG=latest
+      - export RF_ACCESS_TOKEN=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
+      - echo "Logging in to Docker Hub"
+      - docker login -u arvind0001 -p dckr_pat_TYWsDmS5GieTOUPMn4F5s6BMl0o
+
+  build:
+    commands:
+
+      - echo "Pulling the rapidfort/apache image from Docker Hub"
+      - docker image ls
+      - cd community_images/apache/bitnami
+      - ls 
+      - echo "Running docker-compose up"
+      - docker-compose up -d
+      - docker ps -a
+
+  post_build:
+    commands:
+
+  
+      - echo "Running coverage script in the container"
+      - CONTAINER_ID=$(docker ps -qf "name=bitnami-apache-1")
+      - echo "Copying the coverage script to the container"
+      - docker cp coverage_script.sh $CONTAINER_ID:/coverage_script.sh
+
+      - echo "Running the coverage script inside the container"
+      - |
+        if ! docker exec $CONTAINER_ID bash /coverage_script.sh > /tmp/coverage_output.log 2>&1; then
+          echo "Coverage script failed, sending SNS notification";
+          aws sns publish --topic-arn "arn:aws:sns:us-east-1:550843840101:rapidfort" \
+                          --subject "Build Failed: NGINX Coverage Script" \
+                          --message "The coverage script failed to execute. Check the logs for details.\n\n$(cat /tmp/coverage_output.log)";
+          exit 1;
+        fi
+      
+
