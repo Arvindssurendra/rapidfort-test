@@ -44,18 +44,21 @@ set -x  # Enable debug mode
 set -e  # Exit on errors
 
 # Replace 'user www;' with 'user daemon daemon;'
-sed -i 's/user www;/user daemon daemon;/g' /opt/bitnami/nginx/conf/nginx.conf
+# sed -i 's/user www;/user daemon daemon;/g' /opt/bitnami/nginx/conf/nginx.conf
 
 # Print the file to verify the user directive is changed
 cat /opt/bitnami/nginx/conf/nginx.conf
 
 # Load the Nginx modules
-declare -a MODULE_ARRAY=("ngx_http_brotli_static_module" "ngx_stream_geoip2_module" "ngx_http_brotli_filter_module" "ngx_http_geoip2_module")
-for module in "${MODULE_ARRAY[@]}"
-do
-    echo "load_module modules/${module}.so;" | cat - /opt/bitnami/nginx/conf/nginx.conf > /tmp/nginx.conf && \
+MODULE_ARRAY=('ngx_http_brotli_static_module' 'ngx_stream_geoip2_module' 'ngx_http_brotli_filter_module' 'ngx_http_geoip2_module')
+
+for module in "${MODULE_ARRAY[@]}"; do
+    if ! grep -q "load_module modules/${module}.so;" /opt/bitnami/nginx/conf/nginx.conf; then
+        echo "load_module modules/${module}.so;" | cat - /opt/bitnami/nginx/conf/nginx.conf > /tmp/nginx.conf && \
         cp /tmp/nginx.conf /opt/bitnami/nginx/conf/nginx.conf
+    fi
 done
+
 
 # Test Nginx configuration
 nginx -t
