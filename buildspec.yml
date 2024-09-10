@@ -53,6 +53,7 @@ phases:
                           --message "The coverage script executed successfully. Here are the logs:\n\n$(cat /tmp/coverage_output.log)";
         fi
 
+
       # - CONTAINER_ID=$(docker ps -qf "name=bitnami-apache-1")
       
       # - docker exec $CONTAINER_ID curl -I localhost
