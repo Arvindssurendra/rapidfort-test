@@ -1,9 +1,16 @@
+#!/bin/bash
+
+set -e  # Exit the script if any command fails
+
 # Step 1: Replace 'user www www;' with 'user daemon daemon;'
-sed -i 's/user www www;/user daemon daemon;/g' /opt/bitnami/nginx/conf/nginx.conf
+sudo sed -i 's/user www www;/user daemon daemon;/g' /opt/bitnami/nginx/conf/nginx.conf
 
 # Step 2: Verify that the replacement was successful
 echo "Checking the nginx.conf file for the correct user directive"
-cat /opt/bitnami/nginx/conf/nginx.conf | grep 'user daemon daemon;'
+if ! grep -q 'user daemon daemon;' /opt/bitnami/nginx/conf/nginx.conf; then
+    echo "User replacement failed. Exiting."
+    exit 1
+fi
 
 # Step 3: Add module loading directives at the top of nginx.conf
 MODULE_ARRAY=('ngx_http_brotli_static_module' 'ngx_stream_geoip2_module' 'ngx_http_brotli_filter_module' 'ngx_http_geoip2_module')
