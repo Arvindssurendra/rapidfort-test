@@ -41,13 +41,13 @@ phases:
       - echo "Running the coverage script inside the container"
       - |
         if ! docker exec $CONTAINER_ID bash /coverage_script.sh > /tmp/coverage_output.log 2>&1; then
-          echo "apache Coverage script failed, sending SNS notification";
+          echo "apache Coverage script failed, Please check the logs, sending SNS notification";
           aws sns publish --topic-arn "arn:aws:sns:us-east-1:550843840101:rapidfort" \
                           --subject "Build Failed: apache Coverage Script" \
                           --message "The coverage script failed to execute. Check the logs for details.\n\n$(cat /tmp/coverage_output.log)";
           exit 1;
         else
-          echo "apache Coverage script succeeded, sending success notification with logs";
+          echo "apache Coverage script succeeded, Please check the logs, sending success notification with logs";
           aws sns publish --topic-arn "arn:aws:sns:us-east-1:550843840101:rapidfort" \
                           --subject "Build Succeeded: apache Coverage Script" \
                           --message "The coverage script executed successfully. Here are the logs:\n\n$(cat /tmp/coverage_output.log)";
