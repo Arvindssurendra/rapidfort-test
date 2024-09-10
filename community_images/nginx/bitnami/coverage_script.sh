@@ -3,7 +3,7 @@
 set -e  # Exit the script if any command fails
 
 # Step 1: Replace 'user www www;' with 'user daemon daemon;'
-sudo sed -i 's/user www www;/user daemon daemon;/g' /opt/bitnami/nginx/conf/nginx.conf
+sed -i 's/user www www;/user daemon daemon;/g' /opt/bitnami/nginx/conf/nginx.conf
 
 # Step 2: Verify that the replacement was successful
 echo "Checking the nginx.conf file for the correct user directive"
