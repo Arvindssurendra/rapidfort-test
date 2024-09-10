@@ -53,13 +53,12 @@ phases:
                           --message "The coverage script executed successfully. Here are the logs:\n\n$(cat /tmp/coverage_output.log)";
         fi
 
-      # - echo "Running the coverage script inside the container"
-      # - |
-      #   if ! docker exec $CONTAINER_ID bash /coverage_script.sh > /tmp/coverage_output.log 2>&1; then
-      #     echo "Coverage script failed, sending SNS notification";
-      #     aws sns publish --topic-arn "arn:aws:sns:us-east-1:550843840101:rapidfort" \
-      #                     --subject "Build Failed: NGINX Coverage Script" \
-      #                     --message "The coverage script failed to execute. Check the logs for details.\n\n$(cat /tmp/coverage_output.log)";
-      #     exit 1;
-      #   fi
-
+      - CONTAINER_ID=$(docker ps -qf "name=bitnami-apache-1")
+      - docker exec $CONTAINER_ID curl -I localhost
+      - |
+        if ! docker exec $CONTAINER_ID curl -I localhost | grep "200 OK"; then
+          echo "Apache server is not running as expected.";
+          exit 1;
+        else
+          echo "Apache server is running successfully.";
+        fi
