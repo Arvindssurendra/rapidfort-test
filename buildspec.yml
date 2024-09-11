@@ -1,27 +1,22 @@
 version: 0.2
 
-env:
-  variables:
-    DOCKER_USERNAME: "arvind0001"
-    DOCKER_PASSWORD: "dckr_pat_TYWsDmS5GieTOUPMn4F5s6BMl0o"
-
 phases:
   install:
     commands:
-          # Retrieve Docker username and password
+      # Retrieve Docker username and password
       - DOCKER_SECRET_JSON=$(aws secretsmanager get-secret-value --secret-id rapidfort/secrets --query SecretString --output text)
       - export DOCKER_USERNAME=$(echo $DOCKER_SECRET_JSON | jq -r '.DOCKER_USERNAME')
       - export DOCKER_PASSWORD=$(echo $DOCKER_SECRET_JSON | jq -r '.DOCKER_PASSWORD')
       - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+      # Ensure APACHE_IMAGE_REPOSITORY and APACHE_IMAGE_TAG are set
+      - export APACHE_IMAGE_REPOSITORY=${APACHE_IMAGE_REPOSITORY:-"rapidfort/apache"}
+      - export APACHE_IMAGE_TAG=${APACHE_IMAGE_TAG:-"latest"}
+
   build:
     commands:
-      - echo "Pulling the rapidfort/apache image from Docker Hub"
-      - docker image ls
-      - cd community_images/apache/bitnami
-      - ls
-      - echo "Running docker-compose up"
+      - echo "Running docker-compose up with image $APACHE_IMAGE_REPOSITORY:$APACHE_IMAGE_TAG"
       - docker-compose up -d
-      - docker ps -a
+
 
   post_build:
     commands:
