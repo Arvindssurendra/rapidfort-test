@@ -1,6 +1,5 @@
 version: 0.2
 
-
 env:
   parameter-store:
     DOCKER_USERNAME: "/rapidfort/DOCKER_USERNAME"
@@ -12,10 +11,6 @@ env:
 phases:
   install:
     commands:
-
-      # - export APACHE_IMAGE_REPOSITORY="/CodeBuild/NGINX_IMAGE_REPOSITORY"
-      # - export APACHE_IMAGE_TAG="/CodeBuild/NGINX_IMAGE_TAG"
-      # - export RF_ACCESS_TOKEN="/CodeBuild/RF_ACCESS_TOKEN"
       - echo "Testing if environment variables are set"
       - echo "DOCKER_USERNAME: $DOCKER_USERNAME"
       - echo "DOCKER_PASSWORD: $DOCKER_PASSWORD"
@@ -24,7 +19,6 @@ phases:
 
   build:
     commands:
-
       - echo "Pulling the rapidfort/apache image from Docker Hub"
       - cd community_images/apache/bitnami
       - echo "Running docker-compose up"
@@ -33,13 +27,10 @@ phases:
 
   post_build:
     commands:
-
-  
       - echo "Running coverage script in the container"
       - CONTAINER_ID=$(docker ps -qf "name=bitnami-apache-1")
       - echo "Copying the coverage script to the container"
       - docker cp coverage_script.sh $CONTAINER_ID:/coverage_script.sh
-
 
       - echo "Running the coverage script inside the container"
       - |
@@ -56,9 +47,8 @@ phases:
                           --message "The coverage script executed successfully. Here are the logs:\n\n$(cat /tmp/coverage_output.log)";
         fi
 
-
+      # Commented-out code, aligned correctly
       # - CONTAINER_ID=$(docker ps -qf "name=bitnami-apache-1")
-      
       # - docker exec $CONTAINER_ID curl -I localhost
       # - |
       #   if ! docker exec $CONTAINER_ID curl -I localhost | grep "200 OK"; then
