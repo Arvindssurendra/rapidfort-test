@@ -1,34 +1,24 @@
 version: 0.2
 
-# env:
-  # parameter-store:
-  #   DOCKER_USERNAME: /rapidfort/DOCKER_USERNAME
-  #   DOCKER_PASSWORD: /rapidfort/DOCKER_PASSWORD
-  #   APACHE_IMAGE_REPOSITORY: /rapidfort/NGINX_IMAGE_REPOSITORY
-  #   APACHE_IMAGE_TAG: /rapidfort/NGINX_IMAGE_TAG
-  #   RF_ACCESS_TOKEN: /rapidfort/RF_ACCESS_TOKEN
+env:
+  secrets:
+    DOCKER_USERNAME: /rapidfort/docker_username
+    DOCKER_PASSWORD: /rapidfort/docker_password
+    APACHE_IMAGE_REPOSITORY: /rapidfort/apache_image_reposiratory
+    APACHE_IMAGE_TAG: /rapidfort/apache_image_tag
+    RF_ACCESS_TOKEN: /rapidfort/rf_access_token
 
 
 phases:
   install:
     commands:
 
-      # - export DOCKER_USERNAME=$DOCKER_USERNAME
-      # - export DOCKER_PASSWORD=$DOCKER_PASSWORD
-      # - export APACHE_IMAGE_REPOSITORY=$APACHE_IMAGE_REPOSITORY
-      # - export APACHE_IMAGE_TAG=$APACHE_IMAGE_TAG
-      # - export RF_ACCESS_TOKEN=$RF_ACCESS_TOKEN
-      # - echo "Testing if environment variables are set"
-      # - echo "Logging in to Docker Hub"
-      # - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-      # # - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-      - echo "Logging into Docker Hub using credentials from GitHub Secrets"
-      # Use the environment variables for Docker login
-      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-      - echo "Pulling the Apache image from Docker Hub"
-      # Use environment variables to reference the image repository and tag
-      - docker pull $APACHE_IMAGE_REPOSITORY:$APACHE_IMAGE_TAG
-
+      - export DOCKER_USERNAME=$DOCKER_USERNAME
+      - export DOCKER_PASSWORD=$DOCKER_PASSWORD
+      - export APACHE_IMAGE_REPOSITORY=$APACHE_IMAGE_REPOSITORY
+      - export APACHE_IMAGE_TAG=$APACHE_IMAGE_TAG
+      - export RF_ACCESS_TOKEN=$RF_ACCESS_TOKEN
+      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
 
   build:
