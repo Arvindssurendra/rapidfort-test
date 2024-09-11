@@ -12,8 +12,8 @@ phases:
   install:
     commands:
 
-      - echo "DOCKER_USERNAME: $DOCKER_USERNAME"
-      - echo "DOCKER_PASSWORD: ***MASKED***"
+      # - echo "DOCKER_USERNAME: $DOCKER_USERNAME"
+      # - echo "DOCKER_PASSWORD: ***MASKED***"
       - echo "Testing if environment variables are set"
       - echo "Logging in to Docker Hub"
       # - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
