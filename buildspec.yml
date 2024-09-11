@@ -1,54 +1,45 @@
 version: 0.2
 
-
-env:
-  variables:
-    DOCKER_USERNAME: "arvind0001"
-    DOCKER_PASSWORD: "dckr_pat_TYWsDmS5GieTOUPMn4F5s6BMl0o"
-
 phases:
   install:
     commands:
-     # Retrieve Docker username and password
+      # Retrieve Docker username and password
       - DOCKER_SECRET_JSON=$(aws secretsmanager get-secret-value --secret-id rapidfort/secrets --query SecretString --output text)
       - export DOCKER_USERNAME=$(echo $DOCKER_SECRET_JSON | jq -r '.DOCKER_USERNAME')
       - export DOCKER_PASSWORD=$(echo $DOCKER_SECRET_JSON | jq -r '.DOCKER_PASSWORD')
-      - export APACHE_IMAGE_REPOSITORY=$APACHE_IMAGE_REPOSITORY
-      - export APACHE_IMAGE_TAG=$APACHE_IMAGE_TAG
-      - export RF_ACCESS_TOKEN=$RF_ACCESS_TOKEN
       - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+      # Ensure APACHE_IMAGE_REPOSITORY, APACHE_IMAGE_TAG, and RF_ACCESS_TOKEN are set before using them
+      - export APACHE_IMAGE_REPOSITORY=${APACHE_IMAGE_REPOSITORY:-"default_value_for_repo"}
+      - export APACHE_IMAGE_TAG=${APACHE_IMAGE_TAG:-"latest"}
+      - export RF_ACCESS_TOKEN=${RF_ACCESS_TOKEN:-"default_access_token"}
 
   build:
     commands:
-
       - echo "Pulling the rapidfort/apache image from Docker Hub"
       - docker image ls
       - cd community_images/apache/bitnami
-      - ls 
+      - ls
       - echo "Running docker-compose up"
       - docker-compose up -d
       - docker ps -a
 
   post_build:
     commands:
-
-  
       - echo "Running coverage script in the container"
       - CONTAINER_ID=$(docker ps -qf "name=bitnami-apache-1")
       - echo "Copying the coverage script to the container"
       - docker cp coverage_script.sh $CONTAINER_ID:/coverage_script.sh
-
       - echo "Running the coverage script inside the container"
       - |
         if ! docker exec $CONTAINER_ID bash /coverage_script.sh > /tmp/coverage_output.log 2>&1; then
-          echo "apache Coverage script failed, Please check the logs, sending SNS notification";
+          echo "apache Coverage script failed, Please check the logs, sending SNS notification"
           aws sns publish --topic-arn "arn:aws:sns:us-east-1:550843840101:rapidfort" \
                           --subject "Build Failed: apache Coverage Script" \
-                          --message "The coverage script failed to execute. Check the logs for details.\n\n$(cat /tmp/coverage_output.log)";
-          exit 1;
+                          --message "The coverage script failed to execute. Check the logs for details.\n\n$(cat /tmp/coverage_output.log)"
+          exit 1
         else
-          echo "apache Coverage script succeeded, Please check the logs, sending success notification with logs";
+          echo "apache Coverage script succeeded, Please check the logs, sending success notification with logs"
           aws sns publish --topic-arn "arn:aws:sns:us-east-1:550843840101:rapidfort" \
                           --subject "Build Succeeded: apache Coverage Script" \
-                          --message "The coverage script executed successfully. Here are the logs:\n\n$(cat /tmp/coverage_output.log)";
+                          --message "The coverage script executed successfully. Here are the logs:\n\n$(cat /tmp/coverage_output.log)"
         fi
