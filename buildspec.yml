@@ -1,14 +1,5 @@
 version: 0.2
 
-# env:
-#   secrets:
-#     DOCKER_USERNAME: /rapidfort/docker_username
-#     DOCKER_PASSWORD: /rapidfort/docker_password
-#     APACHE_IMAGE_REPOSITORY: /rapidfort/apache_image_reposiratory
-#     APACHE_IMAGE_TAG: /rapidfort/apache_image_tag
-#     RF_ACCESS_TOKEN: /rapidfort/rf_access_token
-
-
 phases:
   install:
     commands:
