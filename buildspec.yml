@@ -2,11 +2,11 @@ version: 0.2
 
 env:
   parameter-store:
-    DOCKER_USERNAME: "/rapidfort/DOCKER_USERNAME"
-    DOCKER_PASSWORD: "/rapidfort/DOCKER_PASSWORD"
-    APACHE_IMAGE_REPOSITORY: "/rapidfort/NGINX_IMAGE_REPOSITORY"
-    APACHE_IMAGE_TAG: "/rapidfort/NGINX_IMAGE_TAG"
-    RF_ACCESS_TOKEN: "/rapidfort/RF_ACCESS_TOKEN"
+    DOCKER_USERNAME: /rapidfort/DOCKER_USERNAME
+    DOCKER_PASSWORD: /rapidfort/DOCKER_PASSWORD
+    APACHE_IMAGE_REPOSITORY: /rapidfort/NGINX_IMAGE_REPOSITORY
+    APACHE_IMAGE_TAG: /rapidfort/NGINX_IMAGE_TAG
+    RF_ACCESS_TOKEN: /rapidfort/RF_ACCESS_TOKEN
 
 phases:
   install:
@@ -16,7 +16,7 @@ phases:
       # - echo "DOCKER_PASSWORD: ***MASKED***"
       - echo "Testing if environment variables are set"
       - echo "Logging in to Docker Hub"
-      # - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
       # - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
       # - docker login -u arvind0001  -p dckr_pat_TYWsDmS5GieTOUPMn4F5s6BMl0o
 
