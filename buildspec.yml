@@ -3,11 +3,11 @@ version: 0.2
 
 env:
   parameter-store:
-    DOCKER_USERNAME: "/CodeBuild/DOCKER_USERNAME"
-    DOCKER_PASSWORD: "/CodeBuild/DOCKER_PASSWORD"
-    APACHE_IMAGE_REPOSITORY: "/CodeBuild/NGINX_IMAGE_REPOSITORY"
-    APACHE_IMAGE_TAG: "/CodeBuild/NGINX_IMAGE_TAG"
-    RF_ACCESS_TOKEN: "/CodeBuild/RF_ACCESS_TOKEN"
+    DOCKER_USERNAME: "/rapidfort/DOCKER_USERNAME"
+    DOCKER_PASSWORD: "/rapidfort/DOCKER_PASSWORD"
+    APACHE_IMAGE_REPOSITORY: "/rapidfort/NGINX_IMAGE_REPOSITORY"
+    APACHE_IMAGE_TAG: "/rapidfort/NGINX_IMAGE_TAG"
+    RF_ACCESS_TOKEN: "/rapidfort/RF_ACCESS_TOKEN"
 
 phases:
   install:
@@ -16,8 +16,11 @@ phases:
       # - export APACHE_IMAGE_REPOSITORY="/CodeBuild/NGINX_IMAGE_REPOSITORY"
       # - export APACHE_IMAGE_TAG="/CodeBuild/NGINX_IMAGE_TAG"
       # - export RF_ACCESS_TOKEN="/CodeBuild/RF_ACCESS_TOKEN"
+      - echo "Testing if environment variables are set"
+      - echo "DOCKER_USERNAME: $DOCKER_USERNAME"
+      - echo "DOCKER_PASSWORD: $DOCKER_PASSWORD"
       - echo "Logging in to Docker Hub"
-      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
 
   build:
     commands:
