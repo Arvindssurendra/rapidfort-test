@@ -17,7 +17,9 @@ phases:
     commands:
 
       - echo "Pulling the rapidfort/apache image from Docker Hub"
+      - docker image ls
       - cd community_images/apache/bitnami
+      - ls 
       - echo "Running docker-compose up"
       - docker-compose up -d
       - docker ps -a
