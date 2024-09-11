@@ -17,8 +17,8 @@ phases:
       - echo "Testing if environment variables are set"
       - echo "Logging in to Docker Hub"
       # - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-      # - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-      - docker login -u arvind0001  -p dckr_pat_TYWsDmS5GieTOUPMn4F5s6BMl0o
+      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+      # - docker login -u arvind0001  -p dckr_pat_TYWsDmS5GieTOUPMn4F5s6BMl0o
 
 
 
