@@ -1,5 +1,10 @@
 version: 0.2
 
+env:
+  variables:
+    DOCKER_USERNAME: "arvind0001"
+    DOCKER_PASSWORD: "dckr_pat_TYWsDmS5GieTOUPMn4F5s6BMl0o"
+
 phases:
   install:
     commands:
