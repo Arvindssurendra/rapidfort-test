@@ -2,28 +2,28 @@ version: 0.2
 
 
 env:
-  variables:
-    DOCKER_USERNAME: "arvind0001"
-    DOCKER_PASSWORD: "dckr_pat_TYWsDmS5GieTOUPMn4F5s6BMl0o"
-
+  parameter-store:
+    DOCKER_USERNAME: "/CodeBuild/DOCKER_USERNAME"
+    DOCKER_PASSWORD: "/CodeBuild/DOCKER_PASSWORD"
+    APACHE_IMAGE_REPOSITORY: "/CodeBuild/NGINX_IMAGE_REPOSITORY"
+    APACHE_IMAGE_TAG: "/CodeBuild/NGINX_IMAGE_TAG"
+    RF_ACCESS_TOKEN: "/CodeBuild/RF_ACCESS_TOKEN"
 
 phases:
   install:
     commands:
+
+      # - export APACHE_IMAGE_REPOSITORY="/CodeBuild/NGINX_IMAGE_REPOSITORY"
+      # - export APACHE_IMAGE_TAG="/CodeBuild/NGINX_IMAGE_TAG"
+      # - export RF_ACCESS_TOKEN="/CodeBuild/RF_ACCESS_TOKEN"
       - echo "Logging in to Docker Hub"
-      - export APACHE_IMAGE_REPOSITORY=rapidfort/apache
-      - export APACHE_IMAGE_TAG=latest
-      - export RF_ACCESS_TOKEN=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
-      - echo "Logging in to Docker Hub"
-      - docker login -u arvind0001 -p dckr_pat_TYWsDmS5GieTOUPMn4F5s6BMl0o
+      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
   build:
     commands:
 
       - echo "Pulling the rapidfort/apache image from Docker Hub"
-      - docker image ls
       - cd community_images/apache/bitnami
-      - ls 
       - echo "Running docker-compose up"
       - docker-compose up -d
       - docker ps -a
