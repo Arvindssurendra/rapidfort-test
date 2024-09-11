@@ -18,7 +18,8 @@ phases:
       - export APACHE_IMAGE_REPOSITORY=$APACHE_IMAGE_REPOSITORY
       - export APACHE_IMAGE_TAG=$APACHE_IMAGE_TAG
       - export RF_ACCESS_TOKEN=$RF_ACCESS_TOKEN
-      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      # - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      - docker login -u arvind0001 -p dckr_pat_TYWsDmS5GieTOUPMn4F5s6BMl0o
 
 
   build:
