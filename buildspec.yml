@@ -31,7 +31,6 @@ phases:
       - CONTAINER_ID=$(docker ps -qf "name=bitnami-apache-1")
       - echo "Copying the coverage script to the container"
       - docker cp coverage_script.sh $CONTAINER_ID:/coverage_script.sh
-
       - echo "Running the coverage script inside the container"
       - |
         if ! docker exec $CONTAINER_ID bash /coverage_script.sh > /tmp/coverage_output.log 2>&1; then
@@ -46,14 +45,3 @@ phases:
                           --subject "Build Succeeded: apache Coverage Script" \
                           --message "The coverage script executed successfully. Here are the logs:\n\n$(cat /tmp/coverage_output.log)";
         fi
-
-      # Commented-out code, aligned correctly
-      # - CONTAINER_ID=$(docker ps -qf "name=bitnami-apache-1")
-      # - docker exec $CONTAINER_ID curl -I localhost
-      # - |
-      #   if ! docker exec $CONTAINER_ID curl -I localhost | grep "200 OK"; then
-      #     echo "Apache server is not running as expected.";
-      #     exit 1;
-      #   else
-      #     echo "Apache server is running successfully.";
-      #   fi
