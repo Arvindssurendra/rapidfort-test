@@ -1,6 +1,6 @@
 version: 0.2
 
-env:
+# env:
   # parameter-store:
   #   DOCKER_USERNAME: /rapidfort/DOCKER_USERNAME
   #   DOCKER_PASSWORD: /rapidfort/DOCKER_PASSWORD
