@@ -1,33 +1,43 @@
 version: 0.2
 
+
+env:
+  variables:
+    DOCKER_USERNAME: "arvind0001"
+    DOCKER_PASSWORD: "dckr_pat_TYWsDmS5GieTOUPMn4F5s6BMl0o"
+
+
 phases:
   install:
     commands:
-
-     # Retrieve Docker username and password
-      - DOCKER_SECRET_JSON=$(aws secretsmanager get-secret-value --secret-id rapidfort/secrets --query SecretString --output text)
-      - export DOCKER_USERNAME=$(echo $DOCKER_SECRET_JSON | jq -r '.DOCKER_USERNAME')
-      - export DOCKER_PASSWORD=$(echo $DOCKER_SECRET_JSON | jq -r '.DOCKER_PASSWORD')
-      - export APACHE_IMAGE_REPOSITORY=$APACHE_IMAGE_REPOSITORY
-      - export APACHE_IMAGE_TAG=$APACHE_IMAGE_TAG
-      - export RF_ACCESS_TOKEN=$RF_ACCESS_TOKEN
-      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-
+      - echo "Logging in to Docker Hub"
+      - export APACHE_IMAGE_REPOSITORY=rapidfort/apache
+      - export APACHE_IMAGE_TAG=latest
+      - export RF_ACCESS_TOKEN=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
+      - echo "Logging in to Docker Hub"
+      - docker login -u arvind0001 -p dckr_pat_TYWsDmS5GieTOUPMn4F5s6BMl0o
 
   build:
     commands:
+
       - echo "Pulling the rapidfort/apache image from Docker Hub"
+      - docker image ls
       - cd community_images/apache/bitnami
+      - ls 
       - echo "Running docker-compose up"
       - docker-compose up -d
       - docker ps -a
 
   post_build:
     commands:
+
+  
       - echo "Running coverage script in the container"
       - CONTAINER_ID=$(docker ps -qf "name=bitnami-apache-1")
       - echo "Copying the coverage script to the container"
       - docker cp coverage_script.sh $CONTAINER_ID:/coverage_script.sh
+
+
       - echo "Running the coverage script inside the container"
       - |
         if ! docker exec $CONTAINER_ID bash /coverage_script.sh > /tmp/coverage_output.log 2>&1; then
