@@ -11,6 +11,7 @@ phases:
       # Ensure APACHE_IMAGE_REPOSITORY and APACHE_IMAGE_TAG are set
       - export APACHE_IMAGE_REPOSITORY=${APACHE_IMAGE_REPOSITORY:-"rapidfort/apache"}
       - export APACHE_IMAGE_TAG=${APACHE_IMAGE_TAG:-"latest"}
+      - export APACHE_CONTAINER_NAME=bitnami-apache-1
 
   build:
     commands:
@@ -22,7 +23,7 @@ phases:
   post_build:
     commands:
       - echo "Running coverage script in the container"
-      - CONTAINER_ID=$(docker ps -qf "name=bitnami-apache-1")
+      - CONTAINER_ID=$(docker ps -qf "name=$APACHE_CONTAINER_NAME")
       - echo "Copying the coverage script to the container"
       - docker cp coverage_script.sh $CONTAINER_ID:/coverage_script.sh
       - echo "Running the coverage script inside the container"
