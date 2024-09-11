@@ -1,25 +1,26 @@
 version: 0.2
 
-env:
-  secrets:
-    DOCKER_USERNAME: /rapidfort/docker_username
-    DOCKER_PASSWORD: /rapidfort/docker_password
-    APACHE_IMAGE_REPOSITORY: /rapidfort/apache_image_reposiratory
-    APACHE_IMAGE_TAG: /rapidfort/apache_image_tag
-    RF_ACCESS_TOKEN: /rapidfort/rf_access_token
+# env:
+#   secrets:
+#     DOCKER_USERNAME: /rapidfort/docker_username
+#     DOCKER_PASSWORD: /rapidfort/docker_password
+#     APACHE_IMAGE_REPOSITORY: /rapidfort/apache_image_reposiratory
+#     APACHE_IMAGE_TAG: /rapidfort/apache_image_tag
+#     RF_ACCESS_TOKEN: /rapidfort/rf_access_token
 
 
 phases:
   install:
     commands:
 
-      - export DOCKER_USERNAME=$DOCKER_USERNAME
-      - export DOCKER_PASSWORD=$DOCKER_PASSWORD
+     # Retrieve Docker username and password
+      - DOCKER_SECRET_JSON=$(aws secretsmanager get-secret-value --secret-id rapidfort/secrets --query SecretString --output text)
+      - export DOCKER_USERNAME=$(echo $DOCKER_SECRET_JSON | jq -r '.DOCKER_USERNAME')
+      - export DOCKER_PASSWORD=$(echo $DOCKER_SECRET_JSON | jq -r '.DOCKER_PASSWORD')
       - export APACHE_IMAGE_REPOSITORY=$APACHE_IMAGE_REPOSITORY
       - export APACHE_IMAGE_TAG=$APACHE_IMAGE_TAG
       - export RF_ACCESS_TOKEN=$RF_ACCESS_TOKEN
-      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-      # - docker login -u arvind0001 -p dckr_pat_TYWsDmS5GieTOUPMn4F5s6BMl0o
+      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
 
 
   build:
