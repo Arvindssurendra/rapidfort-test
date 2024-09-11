@@ -8,7 +8,7 @@ env:
 phases:
   install:
     commands:
-      # Retrieve Docker username and password
+          # Retrieve Docker username and password
       - DOCKER_SECRET_JSON=$(aws secretsmanager get-secret-value --secret-id rapidfort/secrets --query SecretString --output text)
       - export DOCKER_USERNAME=$(echo $DOCKER_SECRET_JSON | jq -r '.DOCKER_USERNAME')
       - export DOCKER_PASSWORD=$(echo $DOCKER_SECRET_JSON | jq -r '.DOCKER_PASSWORD')
