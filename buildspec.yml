@@ -7,11 +7,6 @@ phases:
       - DOCKER_SECRET_JSON=$(aws secretsmanager get-secret-value --secret-id rapidfort/secrets --query SecretString --output text)
       - export DOCKER_USERNAME=$(echo $DOCKER_SECRET_JSON | jq -r '.DOCKER_USERNAME')
       - export DOCKER_PASSWORD=$(echo $DOCKER_SECRET_JSON | jq -r '.DOCKER_PASSWORD')
-      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-      # Ensure APACHE_IMAGE_REPOSITORY, APACHE_IMAGE_TAG, and RF_ACCESS_TOKEN are set before using them
-      - export APACHE_IMAGE_REPOSITORY=${APACHE_IMAGE_REPOSITORY:-"default_value_for_repo"}
-      - export APACHE_IMAGE_TAG=${APACHE_IMAGE_TAG:-"latest"}
-      - export RF_ACCESS_TOKEN=${RF_ACCESS_TOKEN:-"default_access_token"}
 
   build:
     commands:
